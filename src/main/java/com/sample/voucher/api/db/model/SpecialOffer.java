@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SpecialOffer {
-    int offerId;
+    Integer offerId;
     String offerName;
-    double offerDiscount;
+    Double offerDiscount;
 }

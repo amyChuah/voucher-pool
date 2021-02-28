@@ -53,7 +53,7 @@ public class DatabaseRepository {
 	return result;
     }
 
-    public int getOfferId(String offerName) {
+    public int getOfferId(String offerName) throws Exception{
 	int result = offerMapper.selectByName(offerName);
 	return result;
     }

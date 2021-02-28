@@ -26,7 +26,14 @@ public class VoucherPoolServiceImpl implements VoucherPoolService {
     
     @Override
     public Map<String, String> createVoucher(String offerName, Date expiryDate) throws Exception {
-	int offerId = dbRepo.getOfferId(offerName);
+	int offerId;
+	
+	try {
+	    offerId = dbRepo.getOfferId(offerName);
+	} catch (Exception e) {
+	    throw new BusinessException("O01", "Invalid Offer");
+	}
+	
 	List<Customer> custList = dbRepo.getCustomerList(offerId);
 	
 	Map<String, String> result = new HashMap<String, String>();

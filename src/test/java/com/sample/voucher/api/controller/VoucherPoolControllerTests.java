@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sample.voucher.api.controller.request.GenerateVoucherRequest;
+import com.sample.voucher.api.controller.request.GetActiveVoucherRequest;
 import com.sample.voucher.api.controller.request.ValidateVoucherRequest;
 import com.sample.voucher.api.db.model.SpecialOffer;
 import com.sample.voucher.api.db.model.ValidVoucher;
@@ -43,8 +46,10 @@ public class VoucherPoolControllerTests {
     public void generateVoucherCodeReturnSuccess() throws Exception {
 	Map<String, String> voucherList = new HashMap<String, String>();
 	voucherList.put("john.doe@mail.com", "LAgJgzkex2");
+	Calendar calendar = Calendar.getInstance();
+	calendar.set(2021, 4, 30, 0, 0, 0);
 
-	GenerateVoucherRequest request = new GenerateVoucherRequest("Offer1", "2021-03-31");
+	GenerateVoucherRequest request = new GenerateVoucherRequest("Offer1", calendar.getTime());
 
 	Mockito.when(vService.createVoucher(Mockito.any(), Mockito.any())).thenReturn(voucherList);
 
@@ -107,8 +112,7 @@ public class VoucherPoolControllerTests {
     @Test
     @DisplayName("Post /getActiveVoucher success")
     public void getActiveVoucherReturnSuccess() throws Exception {
-	Map<String, String> request = new HashMap<String, String>();
-	request.put("custEmail", "john.doe@mail.com");
+	GetActiveVoucherRequest request = new GetActiveVoucherRequest("john.doe@mail.com");
 	
 	ValidVoucher voucher = new ValidVoucher("LAgJgzkex2", "Offer1", 10.0, "2021-03-31");
 	List<ValidVoucher> result = new ArrayList<ValidVoucher>();
