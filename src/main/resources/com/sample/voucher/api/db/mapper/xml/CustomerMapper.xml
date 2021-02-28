@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.voucher.api.db.mapper.CustomerMapper">
+	<resultMap id="BaseResultMap" type="com.sample.voucher.api.db.model.Customer">
+		<id column="cust_id" jdbcType="BIGINT" property="custId" />
+		<result column="cust_name" jdbcType="VARCHAR" property="custName" />
+		<result column="cust_email" jdbcType="VARCHAR" property="custEmail" />
+	</resultMap>
+
+	<select id="selectByEmail" resultMap="BaseResultMap">
+		select cust_id, cust_name, cust_email from customer where cust_email = #{custEmail}
+	</select>
+
+	<select id="selectCustIdByOfferId" resultMap="BaseResultMap">
+		select cust_id, cust_name, cust_email from customer 
+		where 
+			cust_id not in (select cust_id from voucher_code where offer_id = #{offerId})
+	</select>
+</mapper>

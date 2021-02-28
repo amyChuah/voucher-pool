@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.voucher.api.db.mapper.VoucherCodeMapper">
+	<resultMap id="BaseResultMap" type="com.sample.voucher.api.db.model.VoucherCode">
+		<id column="voucher_id" jdbcType="BIGINT" property="voucherId" />
+		<result column="voucher_cd" jdbcType="VARCHAR" property="voucherCd" />
+		<result column="cust_id" jdbcType="BIGINT" property="custId" />
+		<result column="offer_id" jdbcType="BIGINT" property="offerId" />
+		<result column="expiry_date" jdbcType="TIMESTAMP" property="expiryDate" />
+		<result column="usage_status" jdbcType="INTEGER" property="usageStatus" />
+		<result column="usage_date" jdbcType="TIMESTAMP" property="usageDate" />
+		<result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+	</resultMap>
+
+	<select id="selectByCodeEmail" resultMap="BaseResultMap">
+		select vc.voucher_id, vc.offer_id, vc.expiry_date, vc.usage_status, vc.usage_date
+		from voucher_code vc inner join customer c on vc.cust_id = c.cust_id
+		where vc.voucher_cd = #{voucherCd} and c.cust_email = #{custEmail}
+	</select>
+	
+	<resultMap id="VoucherOfferMap" type="com.sample.voucher.api.db.model.ValidVoucher">
+		<result column="voucher_cd" jdbcType="VARCHAR" property="voucherCd" />
+		<result column="offer_name" jdbcType="VARCHAR" property="offerName" />
+		<result column="offer_discount" jdbcType="DECIMAL" property="offerDiscount" />
+		<result column="expiry_date" jdbcType="TIMESTAMP" property="expiryDate" />
+	</resultMap>
+	
+	<select id="selectActiveVoucher" resultMap="VoucherOfferMap">
+		select vc.voucher_cd, so.offer_name, so.offer_discount, vc.expiry_date
+		from customer c inner join voucher_code vc on c.cust_id = vc.cust_id inner join special_offer so on vc.offer_id = so.offer_id
+		where c.cust_email = #{custEmail} and vc.usage_status = #{usageStatus}
+		order by so.offer_name
+	</select>
+
+	<insert id="insertNewVoucher" parameterType="com.sample.voucher.api.db.model.VoucherCode">
+		insert into voucher_code(voucher_cd, cust_id, offer_id, expiry_date) 
+		values (#{voucherCd,jdbcType=VARCHAR}, #{custId,jdbcType=INTEGER}, #{offerId,jdbcType=INTEGER}, #{expiryDate,jdbcType=TIMESTAMP}) 
+	</insert>
+	
+	<update id="updateById">
+		update voucher_code set usage_status = #{usageStatus,jdbcType=INTEGER}, usage_date = #{usageDate,jdbcType=TIMESTAMP}
+		where voucher_id = #{voucherId,jdbcType=INTEGER} 
+	</update>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sample.voucher.api.db.mapper.SpecialOfferMapper">
+	<resultMap id="BaseResultMap" type="com.sample.voucher.api.db.model.SpecialOffer">
+		<id column="offer_id" jdbcType="BIGINT" property="offerId" />
+		<result column="offer_name" jdbcType="VARCHAR" property="offerName" />
+		<result column="offer_discount" jdbcType="DECIMAL" property="offerDiscount" />
+	</resultMap>
+	<select id="selectById" resultMap="BaseResultMap">
+		select offer_name, offer_discount from special_offer where offer_id= #{offerId}
+	</select>
+	<select id="selectByName" resultType="java.lang.Integer">
+		select offer_id from special_offer where offer_name = #{offerName}
+	</select>
+</mapper>

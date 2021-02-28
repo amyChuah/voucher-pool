@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<property name="LOGS" value="D:/logs" />
+	<property name="maxHistory" value="7" />
+	<property name="totalSizeCap" value="5GB" />
+	<property name="maxFileSize" value="5MB" />
+
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{80}:%method:%line - %msg%n
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="logAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS}/voucher.log</file>
+		<!-- Filter, only record ERROR level logs -->
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+		</encoder>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily and when the file reaches 10 MegaBytes -->
+			<fileNamePattern>${LOGS}/archived/voucher-%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${maxFileSize}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${maxHistory}</maxHistory>
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
+		</rollingPolicy>
+	</appender>
+
+	<root level="DEBUG">
+		<appender-ref ref="logAppender" />
+		<appender-ref ref="consoleAppender" />
+	</root>
+
+	<!--myibatis log configure -->
+	<logger name="com.apache.ibatis" />
+	<logger name="java.sql.Connection" />
+	<logger name="java.sql.Statement" />
+	<logger name="java.sql.PreparedStatement" />
+	<logger name="org.springframework" />
+	<logger name="com.sample" />
+
+</configuration>
